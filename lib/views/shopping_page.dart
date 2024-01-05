@@ -29,60 +29,82 @@ class ShoppingPage extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            Expanded(child: GetX<ShoppingController>(builder: (controller) {
-              return ListView.builder(
-                itemCount: controller.products.length,
-                itemBuilder: (context, index) => Card(
-                  margin: const EdgeInsets.all(12),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Expanded(
+              child: GetX<ShoppingController>(
+                builder: (controller) {
+                  return ListView.builder(
+                    itemCount: controller.products.length,
+                    itemBuilder: (context, index) => Card(
+                      margin: const EdgeInsets.all(12),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  controller.products[index].productName,
-                                  style: const TextStyle(fontSize: 24),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      controller.products[index].productName,
+                                      style: const TextStyle(fontSize: 24),
+                                    ),
+                                    Text(controller
+                                        .products[index].productDescription),
+                                  ],
                                 ),
-                                Text(controller
-                                    .products[index].productDescription),
+                                Text('\$${controller.products[index].price}',
+                                    style: const TextStyle(fontSize: 24)),
                               ],
                             ),
-                            Text('\$${controller.products[index].price}',
-                                style: const TextStyle(fontSize: 24)),
+                            ElevatedButton(
+                              onPressed: () {
+                                cartController
+                                    .addToCart(controller.products[index]);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    Colors.blue, // Цвет фона кнопки
+                                foregroundColor: Colors.white,
+                              ),
+                              child: const Text("Add to cart"),
+                            ),
                           ],
                         ),
-                        ElevatedButton(
-                          onPressed: () {
-                            cartController
-                                .addToCart(controller.products[index]);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue, // Цвет фона кнопки
-                            foregroundColor: Colors.white,
-                          ),
-                          child: const Text("Add to cart"),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-              );
-            })),
-            GetX<CartController>(builder: (controller) {
-              return Text(
-                'Total amount: \$ ${controller.totalPrice}',
+                  );
+                },
+              ),
+            ),
+
+            // GetBuilder<CartController>(
+            //   builder: (controller) {
+            //     return Text(
+            //       'Total amount: \$ ${controller.testAmount}',
+            //       style: const TextStyle(color: Colors.white, fontSize: 25),
+            //     );
+            //   },
+            // ),
+
+            // GetX<CartController>(
+            //   builder: (controller) {
+            //     return Text(
+            //       'Total amount: \$ ${controller.totalPrice}',
+            //       style: const TextStyle(color: Colors.white, fontSize: 25),
+            //     );
+            //   },
+            // ),
+            Obx(
+              () => Text(
+                'Total amount: \$ ${cartController.totalPrice}',
                 style: const TextStyle(color: Colors.white, fontSize: 25),
-              );
-            }),
-            const SizedBox(
-              height: 100,
-            )
+              ),
+            ),
+
+            const SizedBox(height: 100)
           ],
         ),
       ),
