@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_x_state/controllers/cart_controller.dart';
 import 'package:get_x_state/controllers/shopping_controller.dart';
 
 class ShoppingPage extends StatelessWidget {
   final shoppingController = Get.put(ShoppingController());
+  final cartController = Get.put(CartController());
 
   ShoppingPage({super.key});
   @override
@@ -41,7 +43,9 @@ class ShoppingPage extends StatelessWidget {
                         ],
                       ),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          cartController.addToCart(controller.products[index]);
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue, // Цвет фона кнопки
                           foregroundColor: Colors.white,
@@ -54,7 +58,12 @@ class ShoppingPage extends StatelessWidget {
               ),
             );
           })),
-          const Text('Total amount: 0'),
+          GetX<CartController>(builder: (controller) {
+            return Text(
+              'Total amount: \$ ${controller.totalPrice}',
+              style: const TextStyle(color: Colors.white, fontSize: 25),
+            );
+          }),
           const SizedBox(
             height: 100,
           )
